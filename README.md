@@ -17,6 +17,8 @@ Vbucks per kills
 
 **Todo:**
 
+Vbucks per wins
+
 Chapter 1 XP (gs side)
 
 Some basic quests

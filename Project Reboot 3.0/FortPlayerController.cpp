@@ -1303,13 +1303,16 @@ void AFortPlayerController::ClientOnPawnDiedHook(AFortPlayerController* PlayerCo
 
 	if (Fortnite_Version > 1.8 || Fortnite_Version == 1.11)
 	{
-		auto DeathInfo = DeadPlayerState->GetDeathInfo();
+		auto DeathInfo = DeadPlayerState->GetDeathInfo(); // Alloc<void>(DeathInfoStructSize);
 		DeadPlayerState->ClearDeathInfo();
 
-		auto Tags = MemberOffsets::FortPlayerPawn::CorrectTags == 0 ? FGameplayTagContainer()
+		auto/*&*/ Tags = MemberOffsets::FortPlayerPawn::CorrectTags == 0 ? FGameplayTagContainer()
 			: DeadPawn->Get<FGameplayTagContainer>(MemberOffsets::FortPlayerPawn::CorrectTags);
+		// *(FGameplayTagContainer*)(__int64(DeathReport) + MemberOffsets::DeathReport::Tags);
 
-		DeathCause = ToDeathCause(Tags, false, DeadPawn);
+		// LOG_INFO(LogDev, "Tags: {}", Tags.ToStringSimple(true));
+
+		DeathCause = ToDeathCause(Tags, false, DeadPawn); // DeadPawn->IsDBNO() ??
 
 		FGameplayTagContainer CopyTags;
 
@@ -1360,55 +1363,12 @@ void AFortPlayerController::ClientOnPawnDiedHook(AFortPlayerController* PlayerCo
 		{
 			DeadPlayerState->ProcessEvent(OnRep_DeathInfoFn);
 		}
-	}
-
-	auto AllPlayerStates = UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFortPlayerStateAthena::StaticClass());
-	for (int i = 0; i < AllPlayerStates.Num(); ++i)
-	{
-		auto CurrentPlayerState = Cast<AFortPlayerStateAthena>(AllPlayerStates.At(i));
-		if (!CurrentPlayerState) continue;
-		auto ControllerOwner = CurrentPlayerState->GetOwner();
-
-		if (ControllerOwner && ControllerOwner->IsA(AFortPlayerControllerAthena::StaticClass()) && CurrentPlayerState->GetPlace() == 1)
-		{
-			std::string PlayerName = CurrentPlayerState->GetPlayerName().ToString();
-			std::string apiKey = "ur API key here";
-			std::string reason = "Win";
-
-			std::string apiUrl1 = "http://127.0.0.1:3551/api/reload/vbucks?apikey=" + apiKey +
-				"&username=" + PlayerName + "&reason=" + reason;
-
-			CURL* curl;
-			CURLcode res;
-
-			curl = curl_easy_init();
-			if (curl)
-			{
-				curl_easy_setopt(curl, CURLOPT_URL, apiUrl1.c_str());
-				curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-
-				res = curl_easy_perform(curl);
-				if (res != CURLE_OK)
-				{
-					LOG_ERROR(LogDev, "curl request failed for {}: {}", PlayerName, curl_easy_strerror(res));
-				}
-				else
-				{
-					LOG_INFO(LogDev, "Successfully added V-Bucks for {}", PlayerName);
-				}
-
-				curl_easy_cleanup(curl);
-			}
-			else
-			{
-				LOG_ERROR(LogDev, "Failed to initialize curl for {}.", PlayerName);
-			}
-		}
 
 		if (KillerPlayerState && KillerPlayerState != DeadPlayerState)
 		{
+
 			std::string username = KillerPlayerState->GetPlayerName().ToString();
-			std::string apiKey = "Ur API Key here";
+			std::string apiKey = "Api key here man";
 			std::string reason = "Kill";
 			std::string apiUrl = "http://127.0.0.1:3551/api/reload/vbucks?apikey=" + apiKey +
 				"&username=" + username + "&reason=" + reason;
@@ -1438,7 +1398,6 @@ void AFortPlayerController::ClientOnPawnDiedHook(AFortPlayerController* PlayerCo
 			{
 				LOG_ERROR(LogDev, "Failed to initialize curl for {}.", killerUsername);
 			}
-
 
 			if (MemberOffsets::FortPlayerStateAthena::KillScore != -1)
 				KillerPlayerState->Get<int>(MemberOffsets::FortPlayerStateAthena::KillScore)++;
