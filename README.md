@@ -2,6 +2,8 @@
 
 RushGS is based on Project Reboot 3.0 and all main credits go to Milxnor. This is my first Open Source big OGFN gameserver.
 
+All of these features are tested with Reload backend, so some features need some reload backend files. I don't provide my API's i use for testing, so those u need to make yourself.
+
 ## IF YOU ARE USING THIS PLEASE CREDIT ME (tnv) and ofc our friend Milxnor!
 ---------------------------------------------------------------------------------------------------------------------------------
 
