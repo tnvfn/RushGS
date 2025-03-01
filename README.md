@@ -11,11 +11,11 @@ All of these features are tested with Reload backend, so some features need some
 
 Better discord webhook!
 
+Vbucks per kills
+
 ---------------------------------------------------------------------------------------------------------------------------------
 
 **Todo:**
-
-Vbucks per kills
 
 Chapter 1 XP (gs side)
 
