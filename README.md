@@ -37,3 +37,5 @@ Maybe even new desing if i get motivation
 **Those are things u would expect but not confirmed. The progression is slow, because i can't be at home that often.**
 
 Just as reminder Please Credit me.
+
+**I did froze this for moment, because lot of things has been happening on my personal life.**
